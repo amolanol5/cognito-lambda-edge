@@ -42,11 +42,10 @@ resource "aws_iam_policy" "lambda_edge_policy" {
       "Sid": "Stmt1657743377437",
       "Action": [
         "lambda:GetFunction",
-        "lambda:GetFunction",
-        "lambda:GetFunctionConfiguration"
+        "lambda:EnableReplication*"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:lambda:us-east-1:515411507312:function:lambda-edge-1"
+      "Resource": "${aws_lambda_function.edge_lambda.qualified_arn}"
     }
   ]
 }
@@ -75,8 +74,8 @@ resource "aws_lambda_function" "edge_lambda" {
   filename      = "src/hello-world-python.zip"
   function_name = "lambda-edge-2"
   role          = aws_iam_role.iam_for_lambda.arn
-  handler       = "index.test"
-  runtime = "python3.8"
-  publish = true
-  
-  }
+  handler       = "lambda_function.lambda_handler"
+  runtime       = "python3.8"
+  publish       = true
+
+}
